@@ -17,7 +17,7 @@ import (
 func NewManulJobSubmitCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "submit",
-		Short: "Job Submit",
+		Short: "Job submitting",
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			conn := NewGrpcConn()
 			defer conn.Close()
@@ -125,7 +125,7 @@ func NewManulJobCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "job",
 		Short: "Job Operations",
-		RunE: func(cmd *cobra.Command, args []string) (err error) {
+		PreRunE: func(cmd *cobra.Command, args []string) (err error) {
 			return
 		},
 	}

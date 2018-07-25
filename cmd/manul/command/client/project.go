@@ -14,10 +14,10 @@ import (
 	"time"
 )
 
-func NewManulProjectCommand() *cobra.Command {
+func NewManulProjectSubmitCommand() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "project",
-		Short: "Project Operations",
+		Use:   "submit",
+		Short: "Create a new project",
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			conn := NewGrpcConn()
 			defer conn.Close()
@@ -82,5 +82,19 @@ func NewManulProjectCommand() *cobra.Command {
 	cmd.PersistentFlags().StringP("dir", "d", ".", "project base dir")
 	cmd.PersistentFlags().StringP("name", "n", "", "project name")
 	cmd.PersistentFlags().String("desc", "", "project description")
+	return cmd
+}
+
+func NewManulProjectCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "project",
+		Short: "Project Operations",
+		PreRunE: func(cmd *cobra.Command, args []string) (err error) {
+			return nil
+		},
+	}
+	cmd.AddCommand(
+		NewManulProjectSubmitCommand(),
+	)
 	return cmd
 }
