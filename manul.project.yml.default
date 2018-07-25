@@ -28,7 +28,11 @@ job:
   summarize:
     script: echo "summarize stage... [$foo]"
     scripts:
+      - echo "wait for a while"
+      - sleep 20
       - ls -al /tmp
+      - "[ -f data.txt ] && cat data.txt"
+      - echo "all done"
 
 
 
