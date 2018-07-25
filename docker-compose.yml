@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  mongo:
+    image: mongo:3
+    restart: always
+    ports:
+      - 33017:27017 # for debug
+    volumes:
+      - ./test-data/mongo:/data/db
+      - ./scripts:/scripts
+    environment:
+      - CONTAINER=docker
+    command: [ "--storageEngine", "wiredTiger", "--auth"]
+
+  manul:
+    build: ./
+    ports:
+      - 35000:35000
+      - 35001:35001
+    restart: always
+    volumes:
+      - ./test-data/data:/data
+      - ./manul.yml.default:/etc/manul.yml
+    environment:
+      - CONTAINER=docker
+    command: ["server", "-v"]

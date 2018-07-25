@@ -1,0 +1,26 @@
+db:
+  mongo:
+    addrs:
+    - localhost:27017
+    auth:
+      db: admin
+      pass: pass
+      user: user
+    db: admin
+    with_auth: true
+
+rpc:
+  host: 127.0.0.1
+  bind: 0.0.0.0
+  port: 35000
+  option:
+    max_recv_msg_size_mb: 100
+    max_send_msg_size_mb: 100
+    max_task_size_per_batch: 100
+  http:
+    host: 127.0.0.1
+    bind: 0.0.0.0
+    port: 35100
+
+fs:
+  workdir: /tmp/manul/workdir

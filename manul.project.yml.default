@@ -1,0 +1,35 @@
+image: fedora
+
+# You may visit http://www.yamllint.com/
+# For a validation
+env:
+  - "foo=bar"
+
+volume:
+  - "test-data:/tmp:ro"
+
+stage:
+  - pre-install
+  - install
+  - define
+  - summarize
+
+job:
+  pre-install:
+    scripts:
+      - echo plan pre-install
+      - echo "123 ${fff}"
+      - "[ ! -z ${HOME+x} ] && echo ${HOME}"
+      - "[ ! -z ${foo+x} ] && echo ${foo}"
+      - test -d '/tmp'
+#      - "echo '/tmp' '/Users' | xargs -n 1 ls -al"
+  install:
+    script: echo "install stage..."
+  summarize:
+    script: echo "summarize stage... [$foo]"
+    scripts:
+      - ls -al /tmp
+
+
+
+
