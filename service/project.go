@@ -29,11 +29,10 @@ func NewProjectServiceImpl(env *Env) *ProjectServiceImpl {
 	}
 }
 
-func (p *ProjectServiceImpl) InitProject(name string) (err error) {
+func (p *ProjectServiceImpl) InitProjectWorkdir(id string) (err error) {
 	p.muFs.Lock()
 	defer p.muFs.Unlock()
-	base := p.env.SpawnWorkdir()
-	base.Goto(name)
+	base := p.env.SpawnProjectWorkdir().Goto(id)
 
 	if base.Exists("/") || base.IsDir("/") {
 		return errors.New("already exists")
@@ -50,10 +49,16 @@ func (p *ProjectServiceImpl) ListProjects(context.Context, *pb.ListProjectsReque
 	return nil, errors.New("implement me")
 }
 
-func (p *ProjectServiceImpl) createProject(base *workdir.Workdir, name, desc, createdBy string) (proj *model.Project, err error) {
+func (p *ProjectServiceImpl) createProject(base *workdir.Workdir, id, name, desc, createdBy string) (proj *model.Project, err error) {
 	mc := p.env.SpawnMgoCli()
 	defer mc.Close()
-	pid := mongo.NewObjectId()
+
+	pid, e := mongo.SafeToObjectId(id)
+
+	if e != nil {
+		pid = mongo.NewObjectId()
+	}
+
 
 	projCfg, e := model.LoadProjectConfig(base.Path("manul.project.yml"))
 
@@ -93,13 +98,14 @@ func (p *ProjectServiceImpl) CreateProject(ctx context.Context, req *pb.CreatePr
 		return
 	} else {
 		reqProj := req.Project
+		id := mongo.NewObjectId().Hex()
 		name := reqProj.Name
 		desc := reqProj.Desc
 
-		if err := p.InitProject(name); err != nil {
+		if err := p.InitProjectWorkdir(id); err != nil {
 			st := model.Status{
-				Code:    errcodes.Code_INVALID_ARGUMENT,
-				Message: "folder already exists",
+				Code:    errcodes.Code_INTERNAL,
+				Message: "unexpected folder already exists",
 			}
 			ret = &pb.CreateProjectResponse{
 				Success: false,
@@ -109,7 +115,7 @@ func (p *ProjectServiceImpl) CreateProject(ctx context.Context, req *pb.CreatePr
 			}
 			return
 		} else {
-			base := p.env.SpawnProjectWorkdir().Goto(name).Rebase()
+			base := p.env.SpawnProjectWorkdir().Goto(id).Rebase()
 
 			// write files here
 			for _, f := range reqProj.Files.Data {
@@ -126,7 +132,7 @@ func (p *ProjectServiceImpl) CreateProject(ctx context.Context, req *pb.CreatePr
 				base.WriteFile(path.Join(f.Path, f.Name), f.Data, perm)
 			}
 
-			if rp, err := p.createProject(base, name, desc, ucli.Name); err != nil {
+			if rp, err := p.createProject(base, id, name, desc, ucli.Name); err != nil {
 				st := model.Status{
 					Code:    errcodes.Code_INTERNAL,
 					Message: fmt.Sprintf("Internal Error: %v", err),

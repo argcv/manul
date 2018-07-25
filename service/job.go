@@ -44,7 +44,7 @@ func (j *JobServiceImpl) startJob(job *model.Job) {
 			j.updateJobProgress(job.Id.Hex(), pb.JobProgress_FAILED)
 			return
 		} else {
-			pjwkdir := j.env.SpawnProjectWorkdir().Goto(pj.Name).Rebase()
+			pjwkdir := j.env.SpawnProjectWorkdir().Goto(pj.Id.Hex()).Rebase()
 			log.Infof("project folder: %v", pjwkdir.Path("/"))
 			jbwkdir := j.env.SpawnJobWorkdir().Goto(job.Id.Hex()).Rebase()
 			log.Infof("job dir: %v", jbwkdir.Path("/"))
@@ -148,6 +148,9 @@ func (j *JobServiceImpl) startJob(job *model.Job) {
 				j.updateJobProgress(job.Id.Hex(), pb.JobProgress_FAILED)
 				return
 			}
+
+			j.updateJobLog(job.Id.Hex(), fmt.Sprintf("job started at: %v", time.Now()))
+			j.updateJobProgress(job.Id.Hex(), pb.JobProgress_PENDING)
 
 			log.Infof("resp.id: %v", resp.ID)
 
@@ -297,8 +300,6 @@ func (j *JobServiceImpl) createJob(uid, pid bson.ObjectId, files *file.Files) (j
 	return
 }
 
-/* TODO:Not implemented yet
- */
 func (j *JobServiceImpl) CreateJob(ctx context.Context, req *pb.CreateJobRequest) (ret *pb.CreateJobResponse, e error) {
 	log.Infof("Create Job...")
 	if ucli, err := j.env.ParseAuthInfo(ctx, req.Auth); err != nil ||
@@ -363,8 +364,6 @@ func (j *JobServiceImpl) CreateJob(ctx context.Context, req *pb.CreateJobRequest
 	}
 }
 
-/* TODO:Not implemented yet
- */
 func (j *JobServiceImpl) GetJob(ctx context.Context, req *pb.GetJobRequest) (ret *pb.GetJobResponse, e error) {
 	log.Infof("Get Job...")
 	if ucli, err := j.env.ParseAuthInfo(ctx, req.Auth); err != nil ||
