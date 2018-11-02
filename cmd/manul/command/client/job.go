@@ -112,7 +112,6 @@ func NewManulJobCheckCommand() *cobra.Command {
 					}
 				}
 
-
 			}
 
 			return

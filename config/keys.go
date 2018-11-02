@@ -24,7 +24,16 @@ const (
 	// Client
 	KeyClientUserName   = "client.user.name"
 	KeyClientUserSecret = "client.user.secret"
-	KeyClientProject    = "client.project"
+	//KeyClientProject    = "client.project"
 
 	KeyFsWorkdir = "fs.workdir"
+
+	KeyMailSMTPHost               = "mail.smtp.host"
+	KeyMailSMTPPort               = "mail.smtp.port"
+	KeyMailSMTPUserSender         = "mail.smtp.sender" // Sender Name, Like: Sunlab Team
+	KeyMailSMTPPerformAuth        = "mail.smtp.with_auth"
+	KeyMailSMTPUserName           = "mail.smtp.auth.user"
+	KeyMailSMTPPassword           = "mail.smtp.auth.pass"
+	KeyMailSMTPUserDefaultFrom    = "mail.smtp.default_from"
+	KeyMailSMTPInsecureSkipVerify = "mail.smtp.insecure_skip_verify"
 )

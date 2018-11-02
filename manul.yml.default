@@ -24,3 +24,15 @@ rpc:
 
 fs:
   workdir: /tmp/manul/workdir
+
+mail:
+  smtp:
+    host: localhost
+    port: 25
+    sender: Sunlab Team
+    with_auth: true
+    auth:
+      user: admin
+      pass: pass
+    default_from: # admin@localhost in case empty
+    insecure_skip_verify: true

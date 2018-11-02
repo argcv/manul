@@ -1,13 +1,13 @@
 package config
 
 import (
+	"fmt"
 	"github.com/argcv/webeh/log"
+	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 	"os"
 	"path/filepath"
 	"strings"
-	"github.com/pkg/errors"
-	"fmt"
 )
 
 var (

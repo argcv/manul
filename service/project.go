@@ -10,11 +10,11 @@ import (
 	"github.com/argcv/manul/client/workdir"
 	"github.com/argcv/manul/model"
 	"github.com/argcv/webeh/log"
+	"gopkg.in/mgo.v2/bson"
 	"os"
 	"path"
 	"sync"
 	"time"
-	"gopkg.in/mgo.v2/bson"
 )
 
 type ProjectServiceImpl struct {
@@ -58,7 +58,6 @@ func (p *ProjectServiceImpl) createProject(base *workdir.Workdir, id, name, desc
 	if e != nil {
 		pid = mongo.NewObjectId()
 	}
-
 
 	projCfg, e := model.LoadProjectConfig(base.Path("manul.project.yml"))
 

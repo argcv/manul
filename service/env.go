@@ -29,8 +29,8 @@ const (
 	DbProjectColl = "project"
 	DbJobColl     = "job"
 
-	FsProjectDir  = "project"
-	FsJobDir      = "job"
+	FsProjectDir = "project"
+	FsJobDir     = "job"
 )
 
 const (
